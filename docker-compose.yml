@@ -3,7 +3,7 @@ version: '3'
 services:
   nginx:
     build:
-      context: .
+      context: ./ers-api
       dockerfile: Dockerfile
     ports:
       - 80:80

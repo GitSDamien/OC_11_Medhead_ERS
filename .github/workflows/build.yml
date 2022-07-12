@@ -18,7 +18,7 @@ jobs:
           lfs: 'true'
       
       - name: Build the Docker image
-        run: docker build -t ers/api -f Dockerfile .
+        run: docker build -t ers/api -f ers-api/Dockerfile .
       
       - name: Generate Deployment Package
         run: zip -r deploy.zip *
