@@ -8,3 +8,23 @@ services:
     ports:
       - 80:80
       - 443:443
+
+  ers-api-mysql:
+    image: mysql:8.0
+    container_name: ers-api-mysql
+    command: mysqld --default-authentication-plugin=mysql_native_password
+    volumes:
+      - mysql-data:/var/local/mysql/data
+      # - ./ers-api/data/mysql-dump:/docker-entrypoint-initdb.d
+    ports:
+      - 3306:3306
+    hostname: ers-api-mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: testdb
+      MYSQL_USER: testuser
+      MYSQL_PASSWORD: root
+      
+volumes:
+  mysql-data:
+    driver: local
