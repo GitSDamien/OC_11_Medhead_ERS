@@ -1,14 +1,28 @@
-# Pull the minimal Ubuntu image
-FROM ubuntu
 
-# Install Nginx
-RUN apt-get -y update && apt-get -y install nginx
+# Set ubuntu 18.04 as base image
+FROM openjdk:11
 
-# Copy the Nginx config
-# COPY default /etc/nginx/sites-available/default
+# Install updates
+RUN apt-get update && apt-get -y install software-properties-common
 
-# Expose the port for access
-EXPOSE 80/tcp
+# Install wget, curl, vim
+RUN apt-get -y install wget curl vim
 
-# Run the Nginx server
-CMD ["/usr/sbin/nginx", "-g", "daemon off;"]
+# Install Maven
+RUN apt-get -y install maven
+
+# Copy ers to user directory
+COPY . /usr/local/ers-api/
+
+WORKDIR /usr/local/ers-api
+
+# Maven install and assemble sample app
+RUN mvn clean
+
+RUN mvn install
+
+RUN cp /usr/local/ers-api/target/*.war /usr/local/ers-api/target/ers.war
+
+# Execute app
+CMD ["java","-jar","/usr/local/ers-api/target/ers.war"]
+

@@ -1,0 +1,14 @@
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\model\LatLong.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\model\BedAvailability.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\dao\HospitalSpecDao.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\controller\HospitalsController.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\model\Hospitals.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\ServletInitializer.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\model\HospitalSpec.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\dao\NHSSpecDao.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\exceptions\HospitalIntrouvableException.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\dao\HospitalsDao.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\model\NHSSpec.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\Application.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\controller\NHSSpecController.java
+D:\Formation_ArchitecteLogiciel\P11\OC_11_Medhead_ERS\ers-api\src\main\java\com\medhead\ers\exceptions\NHSSpecIntrouvableException.java
