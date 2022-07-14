@@ -109,7 +109,7 @@
       "EXTERNAL",
       "EC2"
     ],
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:636384929310:task-definition/ERSTaskDefinition:12",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:636384929310:task-definition/ERSTaskDefinition:14",
     "family": "ERSTaskDefinition",
     "requiresAttributes": [
       {
@@ -137,8 +137,8 @@
     ],
     "networkMode": null,
     "runtimePlatform": null,
-    "cpu": null,
-    "revision": 12,
+    "cpu": "1024",
+    "revision": 14,
     "status": "ACTIVE",
     "inferenceAccelerators": null,
     "proxyConfiguration": null,
