@@ -63,7 +63,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: ${{ secrets.ECS_API_CONTAINER_NAME }}
+          container-name: ers-api
           image: ${{ steps.build-image.outputs.apiimage }}
 
       - name: Fill in the new nginx image ID in the Amazon ECS task definition
@@ -71,7 +71,7 @@ jobs:
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: ${{ steps.api-task-def.outputs.task-definition }}
-          container-name: ${{ secrets.ECS_NGINX_CONTAINER_NAME }}
+          container-name: ers-gateway
           image: ${{ steps.build-image.outputs.webimage }} 
       
       - name: Deploy Amazon ECS task definition
