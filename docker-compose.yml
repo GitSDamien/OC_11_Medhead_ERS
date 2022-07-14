@@ -40,6 +40,7 @@ services:
       context: ./ers-api
       dockerfile: Dockerfile
     container_name: ers-api
+    image: ers-api
     hostname: ers-api
     tty: true
     ports:
@@ -57,6 +58,7 @@ services:
       context: ./ers-gateway
       dockerfile: Dockerfile
     container_name: ers-gateway
+    image: ers-gateway
     hostname: ers-gateway
     tty: true
     ports:

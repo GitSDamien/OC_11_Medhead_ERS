@@ -35,25 +35,16 @@ jobs:
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           ECR_REPOSITORY: reponame
-          # IMAGE_TAG: latest
-          
-          # docker-compose build
-          # docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
-          # docker tag ers-app:latest $ECR_REGISTRY/ers-app:$IMAGE_TAG
-          # docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
-          # docker push $ECR_REGISTRY/ers-app:$IMAGE_TAG
-          # echo "setting output values"
-          # echo "::set-output name=appimage::$ECR_REGISTRY/ers-app:$IMAGE_TAG"
-          # echo "::set-output name=webimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
+          IMAGE_TAG: latest
         run: |
           docker-compose build
-          docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway
-          docker tag ers-app:latest $ECR_REGISTRY/ers-app
-          docker push $ECR_REGISTRY/ers-gateway
-          docker push $ECR_REGISTRY/ers-app
+          docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
+          docker tag ers-app:latest $ECR_REGISTRY/ers-app:$IMAGE_TAG
+          docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
+          docker push $ECR_REGISTRY/ers-app:$IMAGE_TAG
           echo "setting output values"
-          echo "::set-output name=appimage::$ECR_REGISTRY/ers-app"
-          echo "::set-output name=webimage::$ECR_REGISTRY/ers-gateway"
+          echo "::set-output name=appimage::$ECR_REGISTRY/ers-app:$IMAGE_TAG"
+          echo "::set-output name=webimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
 
       # Runs a single command using the runners shell
       - name: Print the image name
