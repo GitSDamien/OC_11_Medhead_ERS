@@ -7,43 +7,109 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
     
 jobs:
 
   build:
     runs-on: ubuntu-latest
+
     steps:
       - uses: actions/checkout@v2
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
         with:
-          lfs: 'true'
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
       
-      - name: Build the Docker image of ers-api
-        run: docker build -t ers-api -f ers-api/Dockerfile ers-api/.
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
       
-      - name: Generate Deployment Package
-        run: zip -r deploy.zip *
-      
-      - name: Get timestamp
-        uses: gerred/actions/current-time@master
-        id: current-time
-        
-      - name: Run string replace
-        uses: frabert/replace-string-action@master
-        id: format-time
-        with:
-          pattern: '[:\.]+'
-          string: "${{ steps.current-time.outputs.time }}"
-          replace-with: '-'
-          flags: 'g'
 
-      - name: Deploy to Elastic Beanstalk
-        uses: einaregilsson/beanstalk-deploy@v14
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: reponame
+          IMAGE_TAG: latest
+        run: |
+          docker-compose build
+          docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
+          docker tag ers-app:latest $ECR_REGISTRY/ers-app:$IMAGE_TAG
+          docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
+          docker push $ECR_REGISTRY/ers-app:$IMAGE_TAG
+          echo "setting output values"
+          echo "::set-output name=appimage::$ECR_REGISTRY/ers-app:$IMAGE_TAG"
+          echo "::set-output name=webimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
+
+      # Runs a single command using the runners shell
+      - name: Print the image name
+        run: |
+          echo the images are
+          echo ${{ steps.build-image.outputs.appimage }}
+          echo ${{ steps.build-image.outputs.webimage }}
+
+      - name: Download task definition
+        run: |
+          aws ecs describe-task-definition --task-definition ${{ secrets.ECS_CONTAINER_DEFINITION }} \
+          --query taskDefinition > task-definition.json
+      
+      - name: Fill in the new app image ID in the Amazon ECS task definition
+        id: app-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          application_name: ERSApp
-          environment_name: Ersapp-env
-          version_label: "ers-api-${{ steps.format-time.outputs.replaced }}"
-          region: us-east-1
-          deployment_package: deploy.zip
+          task-definition: task-definition.json
+          container-name: ${{ secrets.ECS_APP_CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.appimage }}
+
+      - name: Fill in the new nginx image ID in the Amazon ECS task definition
+        id: web-task-def
+        uses: aws-actions/amazon-ecs-render-task-definition@v1
+        with:
+          task-definition: ${{ steps.app-task-def.outputs.task-definition }}
+          container-name: ${{ secrets.ECS_NGINX_CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.webimage }} 
+      
+      - name: Deploy Amazon ECS task definition
+        uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        with:
+          task-definition: ${{ steps.web-task-def.outputs.task-definition }}
+          service: ERSService
+          cluster: ERSCluster
+          wait-for-service-stability: true
+
+
+      # - name: Build the Docker image of ers-api
+      #   run: docker build -t ers-api -f ers-api/Dockerfile ers-api/.
+      
+      # - name: Generate Deployment Package
+      #   run: zip -r deploy.zip *
+      
+      # - name: Get timestamp
+      #   uses: gerred/actions/current-time@master
+      #   id: current-time
+        
+      # - name: Run string replace
+      #   uses: frabert/replace-string-action@master
+      #   id: format-time
+      #   with:
+      #     pattern: '[:\.]+'
+      #     string: "${{ steps.current-time.outputs.time }}"
+      #     replace-with: '-'
+      #     flags: 'g'
+
+      # - name: Deploy to Elastic Beanstalk
+      #   uses: einaregilsson/beanstalk-deploy@v14
+      #   with:
+      #     aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     application_name: ERSApp
+      #     environment_name: Ersapp-env
+      #     version_label: "ers-api-${{ steps.format-time.outputs.replaced }}"
+      #     region: us-east-1
+      #     deployment_package: deploy.zip
 

@@ -52,16 +52,17 @@ services:
       MYSQL_USER: testuser
       MYSQL_PASSWORD: root
 
-  # ers-gateway:
-  #   build: ers-gateway
-  #   image: ers-gateway
-  #   container_name: ers-gateway
-  #   hostname: ers-gateway
-  #   tty: true
-  #   ports:
-  #     - '80:80'
-  #   depends_on:
-  #     - ers-api
+  ers-gateway:
+    build:
+      context: ./ers-gateway
+      dockerfile: Dockerfile
+    container_name: ers-gateway
+    hostname: ers-gateway
+    tty: true
+    ports:
+      - '80:80'
+    depends_on:
+      - ers-api
 
   # fake-api-hospital:
   #   build: fake-api-hospital
