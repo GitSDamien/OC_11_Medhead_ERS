@@ -60,7 +60,7 @@ https://www.c-sharpcorner.com/article/deploy-a-dockerized-laravel-application-to
 
 # ECR Créer un référentiel
 
-636384929310.dkr.ecr.us-east-1.amazonaws.com/ers-app
+636384929310.dkr.ecr.us-east-1.amazonaws.com/ers-api
 636384929310.dkr.ecr.us-east-1.amazonaws.com/ers-gateway
 
 
@@ -70,10 +70,10 @@ ERSTaskDefinition
 
 ## Ajouter un conteneur
 
-ers-app
+ers-api
 ers-gateway
-    STARTUP DEPENDENCY ORDERING : ers-app       start
-    PARAMETRES DU RESEAU : Lien : ers-app
+    STARTUP DEPENDENCY ORDERING : ers-api       start
+    PARAMETRES DU RESEAU : Lien : ers-api
 
 # Create the Service of type EC2 in the cluster with the Application load balancer and attach the Task definition
 

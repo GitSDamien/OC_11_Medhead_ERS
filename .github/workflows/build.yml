@@ -39,18 +39,18 @@ jobs:
         run: |
           docker-compose build
           docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
-          docker tag ers-app:latest $ECR_REGISTRY/ers-app:$IMAGE_TAG
+          docker tag ers-api:latest $ECR_REGISTRY/ers-api:$IMAGE_TAG
           docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
-          docker push $ECR_REGISTRY/ers-app:$IMAGE_TAG
+          docker push $ECR_REGISTRY/ers-api:$IMAGE_TAG
           echo "setting output values"
           echo "::set-output name=webimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
-          echo "::set-output name=appimage::$ECR_REGISTRY/ers-app:$IMAGE_TAG"
+          echo "::set-output name=apiimage::$ECR_REGISTRY/ers-api:$IMAGE_TAG"
 
       # Runs a single command using the runners shell
       - name: Print the image name
         run: |
           echo the images are
-          echo ${{ steps.build-image.outputs.appimage }}
+          echo ${{ steps.build-image.outputs.apiimage }}
           echo ${{ steps.build-image.outputs.webimage }}
 
       - name: Download task definition
@@ -58,19 +58,19 @@ jobs:
           aws ecs describe-task-definition --task-definition ${{ secrets.ECS_CONTAINER_DEFINITION }} \
           --query taskDefinition > task-definition.json
       
-      - name: Fill in the new app image ID in the Amazon ECS task definition
-        id: app-task-def
+      - name: Fill in the new api image ID in the Amazon ECS task definition
+        id: api-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
           task-definition: task-definition.json
-          container-name: ${{ secrets.ECS_APP_CONTAINER_NAME }}
-          image: ${{ steps.build-image.outputs.appimage }}
+          container-name: ${{ secrets.ECS_API_CONTAINER_NAME }}
+          image: ${{ steps.build-image.outputs.apiimage }}
 
       - name: Fill in the new nginx image ID in the Amazon ECS task definition
         id: web-task-def
         uses: aws-actions/amazon-ecs-render-task-definition@v1
         with:
-          task-definition: ${{ steps.app-task-def.outputs.task-definition }}
+          task-definition: ${{ steps.api-task-def.outputs.task-definition }}
           container-name: ${{ secrets.ECS_NGINX_CONTAINER_NAME }}
           image: ${{ steps.build-image.outputs.webimage }} 
       
