@@ -43,19 +43,19 @@ https://www.c-sharpcorner.com/article/deploy-a-dockerized-laravel-application-to
     Nombre d'instances souhaitées                           1
     Paire de clés
     ID d'AMI ECS                                            ami-040d909ea4e56f8f3
-    VPC                                                     vpc-0d568555ddcb9afa8
-    Sous-réseau 1                                           subnet-0ad69d27e7c69b9f0
-    Association de sous-réseau 1 à une table de routage     rtbassoc-0ec0d5d76351c90eb
-    Sous-réseau 2                                           subnet-0bb23097e6a0cb451
-    Association de sous-réseau 2 à une table de routage     rtbassoc-012f5eb1013ab3a23
+    VPC                                                     vpc-08eb6cbf1bb19ee50
+    Sous-réseau 1                                           subnet-00f74aa24a915895f
+    Association de sous-réseau 1 à une table de routage     rtbassoc-01943aaf579ec6b5c
+    Sous-réseau 2                                           subnet-0a1fbf980970b2c51
+    Association de sous-réseau 2 à une table de routage     rtbassoc-02d1b739e232010e3
     Zones de disponibilité VPC                              us-east-1a, us-east-1b, us-east-1c, us-east-1d, us-east-1e, us-east-1f
-    Groupe de sécurité                                      sg-0660e87b01d9d3c19
-    Passerelle Internet                                     igw-020d7e4fbac26dc4d
-    Table de routage                                        rtb-0a0cbf15d5b226c8a
-    Route Amazon EC2                                        EC2Co-Publi-1LN30OW4QQBK2
-    Attachement VPC Passerelle                              EC2Co-Attac-JVOVBDN5PL3A
-    Configuration de lancement                              EC2ContainerService-ERSCluster-EcsInstanceLc-qtlM3k7KgJso
-    Groupe Auto Scaling                                     EC2ContainerService-ERSCluster-EcsInstanceAsg-11CXBMTJ2T0O9
+    Groupe de sécurité                                      sg-0072da76b406a0c55
+    Passerelle Internet                                     igw-0ba1db7ed0ee453dc
+    Table de routage                                        rtb-08113184c89c6e185
+    Route Amazon EC2                                        EC2Co-Publi-FLY16L9RHWJ3
+    Attachement VPC Passerelle                              EC2Co-Attac-7T8LGUHVWZ4C
+    Configuration de lancement                              EC2ContainerService-ERSCluster-EcsInstanceLc-GOoUO2hLgSq2
+    Groupe Auto Scaling                                     EC2ContainerService-ERSCluster-EcsInstanceAsg-10Q1NVBOS5O4D
 
 
 # ECR Créer un référentiel
@@ -74,6 +74,18 @@ ers-api
 ers-gateway
     STARTUP DEPENDENCY ORDERING : ers-api       start
     PARAMETRES DU RESEAU : Lien : ers-api
+
+
+
+
+https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#LoadBalancers:sort=loadBalancerName
+
+ERSLoadBalancer
+
+https://us-east-1.console.aws.amazon.com/ec2/v2/home?region=us-east-1#CreateTargetGroup:
+
+ERSTargetGroup
+
 
 # Create the Service of type EC2 in the cluster with the Application load balancer and attach the Task definition
 
