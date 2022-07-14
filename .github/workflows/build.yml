@@ -43,8 +43,8 @@ jobs:
           docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
           docker push $ECR_REGISTRY/ers-app:$IMAGE_TAG
           echo "setting output values"
-          echo "::set-output name=appimage::$ECR_REGISTRY/ers-app:$IMAGE_TAG"
           echo "::set-output name=webimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
+          echo "::set-output name=appimage::$ECR_REGISTRY/ers-app:$IMAGE_TAG"
 
       # Runs a single command using the runners shell
       - name: Print the image name
