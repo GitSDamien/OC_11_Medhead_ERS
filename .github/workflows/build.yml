@@ -13,7 +13,9 @@ on:
     
 jobs:
 
-  Build and Deploy to AWS:
+  buildDeployAWS:
+    - name: Build And Deploy to AWS
+
     runs-on: ubuntu-latest
 
     steps:
