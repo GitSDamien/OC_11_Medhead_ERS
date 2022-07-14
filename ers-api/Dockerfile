@@ -17,9 +17,9 @@ COPY . /usr/local/ers-api/
 WORKDIR /usr/local/ers-api
 
 # Maven install and assemble sample app
-RUN mvn clean
+RUN mvn -B clean
 
-RUN mvn install
+RUN mvn -B install
 
 RUN cp /usr/local/ers-api/target/*.war /usr/local/ers-api/target/ers.war
 

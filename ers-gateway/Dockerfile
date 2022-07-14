@@ -17,9 +17,9 @@ COPY . /usr/local/ers-gateway/
 WORKDIR /usr/local/ers-gateway
 
 # Maven install and assemble sample app
-RUN mvn clean
+RUN mvn -B clean
 
-RUN mvn install
+RUN mvn -B install
 
 RUN cp /usr/local/ers-gateway/target/*.jar /usr/local/ers-gateway/target/ers-gateway.jar
 

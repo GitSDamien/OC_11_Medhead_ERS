@@ -55,7 +55,7 @@ jobs:
 
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition ${{ secrets.ECS_CONTAINER_DEFINITION }} \
+          aws ecs describe-task-definition --task-definition ERSTaskDef \
           --query taskDefinition > task-definition.json
       
       - name: Fill in the new api image ID in the Amazon ECS task definition
