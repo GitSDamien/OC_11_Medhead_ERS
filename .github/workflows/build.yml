@@ -81,7 +81,7 @@ jobs:
           task-definition: ${{ steps.web-task-def.outputs.task-definition }}
           service: ERSService
           cluster: ERSCluster
-          wait-for-service-stability: true
+          # wait-for-service-stability: true
 
 
       # - name: Build the Docker image of ers-api
