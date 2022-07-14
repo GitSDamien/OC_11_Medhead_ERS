@@ -25,7 +25,7 @@
         "workingDirectory": null,
         "secrets": null,
         "dockerSecurityOptions": null,
-        "memory": 128,
+        "memory": 256,
         "memoryReservation": null,
         "volumesFrom": [],
         "stopTimeout": null,
@@ -71,7 +71,7 @@
         "workingDirectory": null,
         "secrets": null,
         "dockerSecurityOptions": null,
-        "memory": 128,
+        "memory": 256,
         "memoryReservation": null,
         "volumesFrom": [],
         "stopTimeout": null,
@@ -109,7 +109,7 @@
       "EXTERNAL",
       "EC2"
     ],
-    "taskDefinitionArn": "arn:aws:ecs:us-east-1:636384929310:task-definition/ERSTaskDefinition:10",
+    "taskDefinitionArn": "arn:aws:ecs:us-east-1:636384929310:task-definition/ERSTaskDefinition:12",
     "family": "ERSTaskDefinition",
     "requiresAttributes": [
       {
@@ -138,7 +138,7 @@
     "networkMode": null,
     "runtimePlatform": null,
     "cpu": null,
-    "revision": 10,
+    "revision": 12,
     "status": "ACTIVE",
     "inferenceAccelerators": null,
     "proxyConfiguration": null,
