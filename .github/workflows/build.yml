@@ -34,7 +34,6 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          # ECR_REPOSITORY: reponame
           IMAGE_TAG: latest
         run: |
           docker-compose build
@@ -46,7 +45,6 @@ jobs:
           echo "::set-output name=webimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
           echo "::set-output name=apiimage::$ECR_REGISTRY/ers-api:$IMAGE_TAG"
 
-      # Runs a single command using the runners shell
       - name: Print the image name
         run: |
           echo the images are
@@ -55,8 +53,15 @@ jobs:
 
       - name: Download task definition
         run: |
-          aws ecs describe-task-definition --task-definition ERSTaskDef \
-          --query taskDefinition > task-definition.json
+          aws ecs describe-task-definition --task-definition ERSTaskDef --query taskDefinition | jq -r 'del(
+            .taskDefinitionArn,
+            .requiresAttributes,
+            .compatibilities,
+            .revision,
+            .status,
+            .registeredAt,
+            .registeredBy
+          )' > task-definition.json
       
       - name: Fill in the new api image ID in the Amazon ECS task definition
         id: api-task-def
@@ -81,35 +86,3 @@ jobs:
           service: ERSService
           cluster: ERSCluster
           # wait-for-service-stability: true
-
-
-      # - name: Build the Docker image of ers-api
-      #   run: docker build -t ers-api -f ers-api/Dockerfile ers-api/.
-      
-      # - name: Generate Deployment Package
-      #   run: zip -r deploy.zip *
-      
-      # - name: Get timestamp
-      #   uses: gerred/actions/current-time@master
-      #   id: current-time
-        
-      # - name: Run string replace
-      #   uses: frabert/replace-string-action@master
-      #   id: format-time
-      #   with:
-      #     pattern: '[:\.]+'
-      #     string: "${{ steps.current-time.outputs.time }}"
-      #     replace-with: '-'
-      #     flags: 'g'
-
-      # - name: Deploy to Elastic Beanstalk
-      #   uses: einaregilsson/beanstalk-deploy@v14
-      #   with:
-      #     aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-      #     aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      #     application_name: ERSApp
-      #     environment_name: Ersapp-env
-      #     version_label: "ers-api-${{ steps.format-time.outputs.replaced }}"
-      #     region: us-east-1
-      #     deployment_package: deploy.zip
-
