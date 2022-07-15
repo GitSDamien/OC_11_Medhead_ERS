@@ -1,0 +1,90 @@
+
+
+name: Deploy to AWS
+
+on:
+  push:
+    branches: [ main ]
+    
+  pull_request:
+    branches: [ main ]
+
+  workflow_dispatch:
+    
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+      
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: latest
+
+          # docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
+          # docker push $ECR_REGISTRY/ers-api:$IMAGE_TAG
+        run: |
+          docker-compose build
+          docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
+          docker tag ers-api:latest $ECR_REGISTRY/ers-api:$IMAGE_TAG
+          
+          echo "setting output values"
+          echo "::set-output name=webimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
+          echo "::set-output name=apiimage::$ECR_REGISTRY/ers-api:$IMAGE_TAG"
+
+      - name: Print the image name
+        run: |
+          echo the images are
+          echo ${{ steps.build-image.outputs.apiimage }}
+          echo ${{ steps.build-image.outputs.webimage }}
+
+      # - name: Download task definition
+      #   run: |
+      #     aws ecs describe-task-definition --task-definition ERSTaskDef --query taskDefinition | jq -r 'del(
+      #       .taskDefinitionArn,
+      #       .requiresAttributes,
+      #       .compatibilities,
+      #       .revision,
+      #       .status,
+      #       .registeredAt,
+      #       .registeredBy
+      #     )' > task-definition.json
+      
+      # - name: Fill in the new api image ID in the Amazon ECS task definition
+      #   id: api-task-def
+      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+      #   with:
+      #     task-definition: task-definition.json
+      #     container-name: ers-api
+      #     image: ${{ steps.build-image.outputs.apiimage }}
+
+      # - name: Fill in the new nginx image ID in the Amazon ECS task definition
+      #   id: web-task-def
+      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+      #   with:
+      #     task-definition: ${{ steps.api-task-def.outputs.task-definition }}
+      #     container-name: ers-gateway
+      #     image: ${{ steps.build-image.outputs.webimage }} 
+      
+      # - name: Deploy Amazon ECS task definition
+      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+      #   with:
+      #     task-definition: ${{ steps.web-task-def.outputs.task-definition }}
+      #     service: ERSService
+      #     cluster: ERSCluster
+      #     wait-for-service-stability: true
