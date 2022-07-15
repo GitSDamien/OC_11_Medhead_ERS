@@ -13,7 +13,9 @@ on:
     
 jobs:
 
-  build:
+  dockercompose_build:
+    name: docker-compose build, tests and push
+
     runs-on: ubuntu-latest
 
     steps:
@@ -52,6 +54,17 @@ jobs:
           echo the images are
           echo ${{ steps.build-image.outputs.apiimage }}
           echo ${{ steps.build-image.outputs.webimage }}
+
+      # https://github.com/dorny/test-reporter
+      - name: Report
+        uses: dorny/test-reporter@v1.5.0
+        if: always()
+        # if: success() || failure()
+        with:
+          name: Maven Tests
+          path: "**/surefire-reports/TEST-*.xml"
+          reporter: java-junit
+          fail-on-error: true
 
       # - name: Download task definition
       #   run: |
