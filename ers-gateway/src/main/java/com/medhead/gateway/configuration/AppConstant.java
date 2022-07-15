@@ -4,6 +4,7 @@ import com.medhead.gateway.model.ApiKey;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+import java.util.Arrays;
 import java.util.List;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
@@ -19,7 +20,7 @@ public class AppConstant {
 //    public static final String SERVICE_B_PATH = "/api/service-b/**";
 //    public static final String SERVICE_B_URI = "http://ers-api:8081/";
 
-    public static final List<ApiKey> apiKeys = List.of(
+    public static final List<ApiKey> apiKeys = Arrays.asList(
         new ApiKey(1, "343C-ED0B-4137-B27E", SERVICE_A_KEY)
 //        ,new ApiKey(2, "343C-ED0B-4137-B27E", SERVICE_B_KEY)
 //        ,new ApiKey(3, "FA48-EF0C-427E-8CCF", SERVICE_B_KEY)
