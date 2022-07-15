@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 env:
-  applicationfolder: ers-api
+  applicationfolder: ./ers-api/
 
 jobs:
 
