@@ -1,31 +1,24 @@
 
 
-name: Test ERS API with Maven
+name: Pipeline CI/CD
 
 on:
-  # push:
-  #   branches: [ main ]
+  push:
+    branches: [ main ]
     
-  # pull_request:
-  #   branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
   workflow_dispatch:
 
-env:
-  applicationfolder: ./ers-api/
-
 jobs:
 
-  build:
-    name: Test ERS API with Maven
+  ersapi:
+    name: ERS-API Test
 
     runs-on: ubuntu-20.04
 
     permissions: write-all
-
-    # defaults:
-    #   run:
-    #     working-directory: ${{ env.applicationfolder }}
 
     steps:
       - name: Checkout Repository
@@ -37,13 +30,13 @@ jobs:
           java-version: 1.8
       
       - name: Build with Maven
-        working-directory: ${{ env.applicationfolder }}
+        working-directory: ./ers-api/
         # --batch-mode : will automatically use default values instead of asking you via prompt for those values
         # -DskipTests : skipping the tests
         run: mvn --batch-mode -DskipTests clean package
       
       - name: Test
-        working-directory: ${{ env.applicationfolder }}
+        working-directory: ./ers-api/
         run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
 
       # https://github.com/dorny/test-reporter
@@ -57,12 +50,3 @@ jobs:
           reporter: java-junit
           fail-on-error: true
       
-      ## Utilisation de scripts
-      # - name: chmod
-      #   run: chmod -R +x ./.github
-      # 
-      # - name: Build and Package Maven
-      #   id: package
-      #   working-directory: ${{ env.applicationfolder }}
-      #   run: $GITHUB_WORKSPACE/.github/scripts/build.sh
-
