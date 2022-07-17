@@ -26,10 +26,13 @@ jobs:
 
       - name: Export test result
         run: | 
+          mkdir ./testresult
+          mkdir ./testresult/ers-api
+          mkdir ./testresult/ers-gateway
           docker cp ers-api:/usr/local/ers-api/target/surefire-reports/ ./testresult/ers-api
           docker cp ers-gateway:/usr/local/ers-gateway/target/surefire-reports/ ./testresult/ers-gateway
 
-      - name: Report
+      - name: Report ERS-API
         uses: dorny/test-reporter@v1.5.0
         if: always()
         # if: success() || failure()
@@ -39,7 +42,7 @@ jobs:
           reporter: java-junit
           fail-on-error: true
 
-      - name: Report
+      - name: Report ERS-GATEWAY
         uses: dorny/test-reporter@v1.5.0
         if: always()
         with:
