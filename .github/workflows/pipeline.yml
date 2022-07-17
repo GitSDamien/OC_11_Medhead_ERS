@@ -26,7 +26,8 @@ jobs:
           echo ------
 
           # docker-compose -f docker-compose.yml up --build -d
-          ls
+          
+          ocker-compose -f docker-compose.yml -p testing up --build --exit-code-from api-test
 
           echo ------
 
