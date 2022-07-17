@@ -11,7 +11,7 @@ services:
      
   phpmyadmin:
     depends_on:
-      - mysql
+      - ers-api-mysql
     image: phpmyadmin
     ports:
       - '9090:80'
