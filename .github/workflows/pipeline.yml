@@ -21,23 +21,31 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Build docker
+      - name: docker-compose up --build
         run: | 
-          echo ------
-
           docker-compose -f docker-compose.yml up --build -d
           
           # docker-compose -f docker-compose.yml -p testing up --build --exit-code-from api-test
 
-          mkdir ./ersapiresults
 
-          docker cp ers-api:/usr/local/ers-api/target/surefire-reports/ ./ersapiresults
+      - name: Export test result
+        run: | 
+          mkdir ./testresult
+          mkdir ./testresult/ers-api
 
-          echo ls ./ersapiresults
+          docker cp ers-api:/usr/local/ers-api/target/surefire-reports/ ./testresult/ers-api
 
-          ls ./ersapiresults
 
-          echo ------
+      # https://github.com/dorny/test-reporter
+      - name: Report
+        uses: dorny/test-reporter@v1.5.0
+        if: always()
+        # if: success() || failure()
+        with:
+          name: ERS-API Test results
+          path: "./testresult/ers-api/surefire-reports/TEST-*.xml"
+          reporter: java-junit
+          fail-on-error: true
 
   # ersapi:
   #   name: ERS-API Test
