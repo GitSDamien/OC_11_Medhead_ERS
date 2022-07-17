@@ -33,7 +33,13 @@ jobs:
 
           docker cp ers-api:/ ./ersapiresults
 
+          echo ls .
+
           ls 
+
+          echo ls ./ersapiresults
+
+          ls ./ersapiresults
           
           echo ------
 
