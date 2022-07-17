@@ -126,7 +126,7 @@ jobs:
           # docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
           # docker push $ECR_REGISTRY/ers-api:$IMAGE_TAG
         run: |
-          docker-compose build
+          docker-compose -f docker-compose.aws.yml build
           docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
           docker tag ers-api:latest $ECR_REGISTRY/ers-api:$IMAGE_TAG
           
