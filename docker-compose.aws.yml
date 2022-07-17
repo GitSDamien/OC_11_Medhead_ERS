@@ -38,7 +38,7 @@ services:
   ers-api:
     build:
       context: ./ers-api
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.aws
     container_name: ers-api
     image: ers-api
     hostname: ers-api
@@ -56,7 +56,7 @@ services:
   ers-gateway:
     build:
       context: ./ers-gateway
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.aws
     container_name: ers-gateway
     image: ers-gateway
     hostname: ers-gateway
