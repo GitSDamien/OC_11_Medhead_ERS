@@ -14,7 +14,7 @@ on:
 jobs:
 
   build:
-    name: Test and Build
+    name: Test, Build and Deploy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -51,12 +51,12 @@ jobs:
           reporter: java-junit
           fail-on-error: true
 
-  deploy:
-    name: Deploy to AWS
-    needs: [build]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
+  # deploy:
+  #   name: Deploy to AWS
+  #   needs: [build]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
       
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
