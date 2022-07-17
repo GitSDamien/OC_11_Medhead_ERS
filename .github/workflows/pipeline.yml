@@ -54,7 +54,7 @@ jobs:
           fail-on-error: true
 
 
-      ######## DEPLOY TO AWS  ###########
+      ######## DEPLOY TO AWS FREE ###########
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         if: success()
@@ -78,18 +78,20 @@ jobs:
         run: |
           docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
           docker tag ers-api:latest $ECR_REGISTRY/ers-api:$IMAGE_TAG
-          docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
-          docker push $ECR_REGISTRY/ers-api:$IMAGE_TAG
+          # docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
+          # docker push $ECR_REGISTRY/ers-api:$IMAGE_TAG
           echo "setting output values"
           echo "::set-output name=gwimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
           echo "::set-output name=apiimage::$ECR_REGISTRY/ers-api:$IMAGE_TAG"
 
-      - name: Print the image name
+      - name: Print the image names
         if: success()
         run: |
           echo the images are
           echo ${{ steps.build-image.outputs.apiimage }}
           echo ${{ steps.build-image.outputs.gwimage }}
+
+      ######## DEPLOY TO AWS RENTABLE ###########
 
       # - name: Download task definition
       #   run: |
