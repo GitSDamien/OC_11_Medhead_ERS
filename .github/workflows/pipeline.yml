@@ -25,10 +25,16 @@ jobs:
         run: | 
           echo ------
 
-          # docker-compose -f docker-compose.yml up --build -d
+          docker-compose -f docker-compose.yml up --build -d
           
-          docker-compose -f docker-compose.yml -p testing up --build --exit-code-from api-test
+          # docker-compose -f docker-compose.yml -p testing up --build --exit-code-from api-test
 
+          mkdir ./ersapiresults
+
+          docker cp ers-api:/ ./ersapiresults
+
+          ls 
+          
           echo ------
 
   # ersapi:
