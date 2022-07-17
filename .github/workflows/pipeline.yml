@@ -31,16 +31,12 @@ jobs:
 
           mkdir ./ersapiresults
 
-          docker cp ers-api:/ ./ersapiresults
-
-          echo ls .
-
-          ls 
+          docker cp ers-api:/usr/local/ers-api/target/surefire-reports/ ./ersapiresults
 
           echo ls ./ersapiresults
 
           ls ./ersapiresults
-          
+
           echo ------
 
   # ersapi:
