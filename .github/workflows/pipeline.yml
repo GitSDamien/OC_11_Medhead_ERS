@@ -27,6 +27,7 @@ jobs:
 
       ########  TEST RESULTS  ###########
       - name: Export test results
+        if: success()
         run: | 
           mkdir ./testresult
           mkdir ./testresult/ers-api
@@ -37,7 +38,6 @@ jobs:
       - name: ERS-API Test results
         uses: dorny/test-reporter@v1.5.0
         if: always()
-        # if: success() || failure()
         with:
           name: ERS-API Test results
           path: "./testresult/ers-api/surefire-reports/TEST-*.xml"
@@ -57,6 +57,7 @@ jobs:
       ######## DEPLOY TO AWS  ###########
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
+        if: success()
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -64,10 +65,12 @@ jobs:
       
       - name: Login to Amazon ECR
         id: login-ecr
+        if: success()
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Tag and push image to Amazon ECR
         id: build-image
+        if: success()
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           IMAGE_TAG: latest
@@ -82,6 +85,7 @@ jobs:
           echo "::set-output name=apiimage::$ECR_REGISTRY/ers-api:$IMAGE_TAG"
 
       - name: Print the image name
+        if: success()
         run: |
           echo the images are
           echo ${{ steps.build-image.outputs.apiimage }}
@@ -122,3 +126,21 @@ jobs:
       #     service: ERSService
       #     cluster: ERSCluster
       #     wait-for-service-stability: true
+
+
+      ###### SLACK NOTIFICATION #########
+      # - name: Send slack notification
+      #   if: always()
+      #   uses: edge/simple-slack-notify@master    
+      #   env:
+      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      #   with:
+      #     channel: '#deployment'
+      #     status: ${{ job.status }}
+      #     success_text: Build completed successfully
+      #     failure_text: 'Build failed'
+      #     cancelled_text: 'Build was cancelled'
+      #     fields: |
+      #       [{ "title": "Repository", "value": "${env.GITHUB_REPOSITORY}", "short": true },
+      #       { "title": "Branch", "value": "${env.BRANCH}", "short": true },
+      #       { "title": "Action URL", "value": "${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}"}]
