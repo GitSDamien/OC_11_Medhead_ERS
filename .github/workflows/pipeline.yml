@@ -6,172 +6,186 @@ on:
   push:
     branches: [ main ]
     
-  pull_request:
-    branches: [ main ]
+  # pull_request:
+  #   branches: [ main ]
 
-  workflow_dispatch:
+  # workflow_dispatch:
 
 jobs:
-
-  ersapi:
-    name: ERS-API Test
-
-    runs-on: ubuntu-20.04
-
-    permissions: write-all
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      
-      - name: Build with Maven
-        working-directory: ./ers-api/
-        # --batch-mode : will automatically use default values instead of asking you via prompt for those values
-        # -DskipTests : skipping the tests
-        run: mvn --batch-mode -DskipTests clean package
-      
-      - name: Test
-        working-directory: ./ers-api/
-        run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
-
-      # https://github.com/dorny/test-reporter
-      - name: Report
-        uses: dorny/test-reporter@v1.5.0
-        if: always()
-        # if: success() || failure()
-        with:
-          name: ERS-API Test results
-          path: "**/surefire-reports/TEST-*.xml"
-          reporter: java-junit
-          fail-on-error: true
-           
-  ersgateway:
-    name: ERS-GATEWAY Test
-
-    runs-on: ubuntu-20.04
-
-    permissions: write-all
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v2
-
-      - name: Set up JDK 1.8
-        uses: actions/setup-java@v1
-        with:
-          java-version: 1.8
-      
-      - name: Build with Maven
-        working-directory: ./ers-gateway/
-        # --batch-mode : will automatically use default values instead of asking you via prompt for those values
-        # -DskipTests : skipping the tests
-        run: mvn --batch-mode -DskipTests clean package
-      
-      - name: Test
-        working-directory: ./ers-gateway/
-        run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
-
-      # https://github.com/dorny/test-reporter
-      - name: Report
-        uses: dorny/test-reporter@v1.5.0
-        if: always()
-        # if: success() || failure()
-        with:
-          name: ERS-GATEWAY Test results
-          path: "**/surefire-reports/TEST-*.xml"
-          reporter: java-junit
-          fail-on-error: true
-
-      ## Utilisation de scripts
-      # - name: chmod
-      #   run: chmod -R +x ./.github
-      # 
-      # - name: Build and Package Maven
-      #   id: package
-      #   working-directory: ${{ env.applicationfolder }}
-      #   run: $GITHUB_WORKSPACE/.github/scripts/build.sh
-
-  dockercompose_build:
-    name: Deploy to AWS
-
-    needs: [ersapi, ersgateway]
-
+  build:
+    # The type of runner that the job will run on
     runs-on: ubuntu-latest
-
+    container:
+      image: lucasalt/act_base:latest
     steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
-      
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: us-east-1
-      
-      - name: Login to Amazon ECR
-        id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build, tag, and push image to Amazon ECR
-        id: build-image
-        env:
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          IMAGE_TAG: latest
-
-          # docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
-          # docker push $ECR_REGISTRY/ers-api:$IMAGE_TAG
-        run: |
-          docker-compose -f docker-compose.aws.yml build
-          docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
-          docker tag ers-api:latest $ECR_REGISTRY/ers-api:$IMAGE_TAG
+      - name: Build docker
+        run: | 
+          echo ---Building and starting up docker---
+          docker-compose -f ./docker-compose.yml -p testing up -d
+          echo ---Containers up---
           
-          echo "setting output values"
-          echo "::set-output name=webimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
-          echo "::set-output name=apiimage::$ECR_REGISTRY/ers-api:$IMAGE_TAG"
+  # ersapi:
+  #   name: ERS-API Test
 
-      - name: Print the image name
-        run: |
-          echo the images are
-          echo ${{ steps.build-image.outputs.apiimage }}
-          echo ${{ steps.build-image.outputs.webimage }}
+  #   runs-on: ubuntu-20.04
 
-      # - name: Download task definition
-      #   run: |
-      #     aws ecs describe-task-definition --task-definition ERSTaskDef --query taskDefinition | jq -r 'del(
-      #       .taskDefinitionArn,
-      #       .requiresAttributes,
-      #       .compatibilities,
-      #       .revision,
-      #       .status,
-      #       .registeredAt,
-      #       .registeredBy
-      #     )' > task-definition.json
+  #   permissions: write-all
+
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Set up JDK 1.8
+  #       uses: actions/setup-java@v1
+  #       with:
+  #         java-version: 1.8
       
-      # - name: Fill in the new api image ID in the Amazon ECS task definition
-      #   id: api-task-def
-      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-      #   with:
-      #     task-definition: task-definition.json
-      #     container-name: ers-api
-      #     image: ${{ steps.build-image.outputs.apiimage }}
-
-      # - name: Fill in the new nginx image ID in the Amazon ECS task definition
-      #   id: web-task-def
-      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-      #   with:
-      #     task-definition: ${{ steps.api-task-def.outputs.task-definition }}
-      #     container-name: ers-gateway
-      #     image: ${{ steps.build-image.outputs.webimage }} 
+  #     - name: Build with Maven
+  #       working-directory: ./ers-api/
+  #       # --batch-mode : will automatically use default values instead of asking you via prompt for those values
+  #       # -DskipTests : skipping the tests
+  #       run: mvn --batch-mode -DskipTests clean package
       
-      # - name: Deploy Amazon ECS task definition
-      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      #   with:
-      #     task-definition: ${{ steps.web-task-def.outputs.task-definition }}
-      #     service: ERSService
-      #     cluster: ERSCluster
-      #     wait-for-service-stability: true
+  #     - name: Test
+  #       working-directory: ./ers-api/
+  #       run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
+
+  #     # https://github.com/dorny/test-reporter
+  #     - name: Report
+  #       uses: dorny/test-reporter@v1.5.0
+  #       if: always()
+  #       # if: success() || failure()
+  #       with:
+  #         name: ERS-API Test results
+  #         path: "**/surefire-reports/TEST-*.xml"
+  #         reporter: java-junit
+  #         fail-on-error: true
+           
+  # ersgateway:
+  #   name: ERS-GATEWAY Test
+
+  #   runs-on: ubuntu-20.04
+
+  #   permissions: write-all
+
+  #   steps:
+  #     - name: Checkout Repository
+  #       uses: actions/checkout@v2
+
+  #     - name: Set up JDK 1.8
+  #       uses: actions/setup-java@v1
+  #       with:
+  #         java-version: 1.8
+      
+  #     - name: Build with Maven
+  #       working-directory: ./ers-gateway/
+  #       # --batch-mode : will automatically use default values instead of asking you via prompt for those values
+  #       # -DskipTests : skipping the tests
+  #       run: mvn --batch-mode -DskipTests clean package
+      
+  #     - name: Test
+  #       working-directory: ./ers-gateway/
+  #       run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
+
+  #     # https://github.com/dorny/test-reporter
+  #     - name: Report
+  #       uses: dorny/test-reporter@v1.5.0
+  #       if: always()
+  #       # if: success() || failure()
+  #       with:
+  #         name: ERS-GATEWAY Test results
+  #         path: "**/surefire-reports/TEST-*.xml"
+  #         reporter: java-junit
+  #         fail-on-error: true
+
+  #     ## Utilisation de scripts
+  #     # - name: chmod
+  #     #   run: chmod -R +x ./.github
+  #     # 
+  #     # - name: Build and Package Maven
+  #     #   id: package
+  #     #   working-directory: ${{ env.applicationfolder }}
+  #     #   run: $GITHUB_WORKSPACE/.github/scripts/build.sh
+
+  # dockercompose_build:
+  #   name: Deploy to AWS
+
+  #   # needs: [ersapi, ersgateway]
+
+  #   runs-on: ubuntu-latest
+
+  #   steps:
+  #     - uses: actions/checkout@v2
+      
+  #     - name: Configure AWS credentials
+  #       uses: aws-actions/configure-aws-credentials@v1
+  #       with:
+  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  #         aws-region: us-east-1
+      
+  #     - name: Login to Amazon ECR
+  #       id: login-ecr
+  #       uses: aws-actions/amazon-ecr-login@v1
+
+  #     - name: Build, tag, and push image to Amazon ECR
+  #       id: build-image
+  #       env:
+  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+  #         IMAGE_TAG: latest
+
+  #         # docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
+  #         # docker push $ECR_REGISTRY/ers-api:$IMAGE_TAG
+  #       run: |
+  #         docker-compose -f docker-compose.aws.yml build
+  #         docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
+  #         docker tag ers-api:latest $ECR_REGISTRY/ers-api:$IMAGE_TAG
+          
+  #         echo "setting output values"
+  #         echo "::set-output name=gwimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
+  #         echo "::set-output name=apiimage::$ECR_REGISTRY/ers-api:$IMAGE_TAG"
+
+  #     - name: Print the image name
+  #       run: |
+  #         echo the images are
+  #         echo ${{ steps.build-image.outputs.apiimage }}
+  #         echo ${{ steps.build-image.outputs.gwimage }}
+
+  #     # - name: Download task definition
+  #     #   run: |
+  #     #     aws ecs describe-task-definition --task-definition ERSTaskDef --query taskDefinition | jq -r 'del(
+  #     #       .taskDefinitionArn,
+  #     #       .requiresAttributes,
+  #     #       .compatibilities,
+  #     #       .revision,
+  #     #       .status,
+  #     #       .registeredAt,
+  #     #       .registeredBy
+  #     #     )' > task-definition.json
+      
+  #     # - name: Fill in the new api image ID in the Amazon ECS task definition
+  #     #   id: api-task-def
+  #     #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #     #   with:
+  #     #     task-definition: task-definition.json
+  #     #     container-name: ers-api
+  #     #     image: ${{ steps.build-image.outputs.apiimage }}
+
+  #     # - name: Fill in the new nginx image ID in the Amazon ECS task definition
+  #     #   id: web-task-def
+  #     #   uses: aws-actions/amazon-ecs-render-task-definition@v1
+  #     #   with:
+  #     #     task-definition: ${{ steps.api-task-def.outputs.task-definition }}
+  #     #     container-name: ers-gateway
+  #     #     image: ${{ steps.build-image.outputs.webimage }} 
+      
+  #     # - name: Deploy Amazon ECS task definition
+  #     #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+  #     #   with:
+  #     #     task-definition: ${{ steps.web-task-def.outputs.task-definition }}
+  #     #     service: ERSService
+  #     #     cluster: ERSCluster
+  #     #     wait-for-service-stability: true

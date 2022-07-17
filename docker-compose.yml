@@ -9,15 +9,15 @@ services:
   #   ports:
   #     - 4025:6379
      
-  # phpmyadmin:
-  #   depends_on:
-  #     - mysql
-  #   image: phpmyadmin
-  #   ports:
-  #     - '9090:80'
-  #   environment:
-  #     PMA_HOST: mysql
-  #     MYSQL_ROOT_PASSWORD: root
+  phpmyadmin:
+    depends_on:
+      - mysql
+    image: phpmyadmin
+    ports:
+      - '9090:80'
+    environment:
+      PMA_HOST: mysql
+      MYSQL_ROOT_PASSWORD: root
  
   ers-api-mysql:
     image: mysql:8.0
@@ -67,9 +67,11 @@ services:
       - ers-api
 
   fake-api-hospital:
-    build: fake-api-hospital
-    image: fake-api-hospital
+    build:
+      context: ./fake-api-hospital
+      dockerfile: Dockerfile
     container_name: fake-api-hospital
+    image: fake-api-hospital
     hostname: fake-api-hospital
     tty: true
     ports:
