@@ -23,9 +23,12 @@ jobs:
 
       - name: Build docker
         run: | 
-          echo ---Building and starting up docker---
-          docker-compose -f docker-compose.yml up -d
-          echo ---Containers up---
+          echo ------
+
+          # docker-compose -f docker-compose.yml up --build -d
+          ls
+
+          echo ------
 
   # ersapi:
   #   name: ERS-API Test
