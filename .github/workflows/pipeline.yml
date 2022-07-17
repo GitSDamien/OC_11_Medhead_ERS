@@ -12,31 +12,23 @@ on:
   workflow_dispatch:
 
 jobs:
+
   build:
-    # The type of runner that the job will run on
+    name: Test, Build
     runs-on: ubuntu-latest
-    # container:
-    #   image: lucasalt/act_base:latest
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
       - name: docker-compose up --build
         run: | 
           docker-compose -f docker-compose.yml up --build -d
-          
           # docker-compose -f docker-compose.yml -p testing up --build --exit-code-from api-test
-
 
       - name: Export test result
         run: | 
-          mkdir ./testresult
-          mkdir ./testresult/ers-api
-
           docker cp ers-api:/usr/local/ers-api/target/surefire-reports/ ./testresult/ers-api
+          docker cp ers-gateway:/usr/local/ers-gateway/target/surefire-reports/ ./testresult/ers-gateway
 
-
-      # https://github.com/dorny/test-reporter
       - name: Report
         uses: dorny/test-reporter@v1.5.0
         if: always()
@@ -44,6 +36,15 @@ jobs:
         with:
           name: ERS-API Test results
           path: "./testresult/ers-api/surefire-reports/TEST-*.xml"
+          reporter: java-junit
+          fail-on-error: true
+
+      - name: Report
+        uses: dorny/test-reporter@v1.5.0
+        if: always()
+        with:
+          name: ERS-GATEWAY Test results
+          path: "./testresult/ers-gateway/surefire-reports/TEST-*.xml"
           reporter: java-junit
           fail-on-error: true
 

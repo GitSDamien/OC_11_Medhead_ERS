@@ -17,9 +17,9 @@ COPY . /usr/local/fake-api-hospital/
 WORKDIR /usr/local/fake-api-hospital
 
 # Maven install and assemble sample app
-RUN mvn clean
+RUN mvn -B clean
 
-RUN mvn install
+RUN mvn -B install
 
 RUN cp /usr/local/fake-api-hospital/target/*.war /usr/local/fake-api-hospital/target/fakehospital.war
 
