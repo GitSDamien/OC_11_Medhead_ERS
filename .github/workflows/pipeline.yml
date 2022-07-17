@@ -14,7 +14,7 @@ on:
 jobs:
 
   build:
-    name: Test, Build
+    name: Test and Build
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -51,132 +51,45 @@ jobs:
           reporter: java-junit
           fail-on-error: true
 
-  # ersapi:
-  #   name: ERS-API Test
-
-  #   runs-on: ubuntu-20.04
-
-  #   permissions: write-all
-
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
-
-  #     - name: Set up JDK 1.8
-  #       uses: actions/setup-java@v1
-  #       with:
-  #         java-version: 1.8
+  deploy:
+    name: Deploy to AWS
+    needs: [build]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
       
-  #     - name: Build with Maven
-  #       working-directory: ./ers-api/
-  #       # --batch-mode : will automatically use default values instead of asking you via prompt for those values
-  #       # -DskipTests : skipping the tests
-  #       run: mvn --batch-mode -DskipTests clean package
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
       
-  #     - name: Test
-  #       working-directory: ./ers-api/
-  #       run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-  #     # https://github.com/dorny/test-reporter
-  #     - name: Report
-  #       uses: dorny/test-reporter@v1.5.0
-  #       if: always()
-  #       # if: success() || failure()
-  #       with:
-  #         name: ERS-API Test results
-  #         path: "**/surefire-reports/TEST-*.xml"
-  #         reporter: java-junit
-  #         fail-on-error: true
-           
-  # ersgateway:
-  #   name: ERS-GATEWAY Test
+      - name: Tag and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          IMAGE_TAG: latest
 
-  #   runs-on: ubuntu-20.04
-
-  #   permissions: write-all
-
-  #   steps:
-  #     - name: Checkout Repository
-  #       uses: actions/checkout@v2
-
-  #     - name: Set up JDK 1.8
-  #       uses: actions/setup-java@v1
-  #       with:
-  #         java-version: 1.8
-      
-  #     - name: Build with Maven
-  #       working-directory: ./ers-gateway/
-  #       # --batch-mode : will automatically use default values instead of asking you via prompt for those values
-  #       # -DskipTests : skipping the tests
-  #       run: mvn --batch-mode -DskipTests clean package
-      
-  #     - name: Test
-  #       working-directory: ./ers-gateway/
-  #       run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
-
-  #     # https://github.com/dorny/test-reporter
-  #     - name: Report
-  #       uses: dorny/test-reporter@v1.5.0
-  #       if: always()
-  #       # if: success() || failure()
-  #       with:
-  #         name: ERS-GATEWAY Test results
-  #         path: "**/surefire-reports/TEST-*.xml"
-  #         reporter: java-junit
-  #         fail-on-error: true
-
-  #     ## Utilisation de scripts
-  #     # - name: chmod
-  #     #   run: chmod -R +x ./.github
-  #     # 
-  #     # - name: Build and Package Maven
-  #     #   id: package
-  #     #   working-directory: ${{ env.applicationfolder }}
-  #     #   run: $GITHUB_WORKSPACE/.github/scripts/build.sh
-
-  # dockercompose_build:
-  #   name: Deploy to AWS
-
-  #   # needs: [ersapi, ersgateway]
-
-  #   runs-on: ubuntu-latest
-
-  #   steps:
-  #     - uses: actions/checkout@v2
-      
-  #     - name: Configure AWS credentials
-  #       uses: aws-actions/configure-aws-credentials@v1
-  #       with:
-  #         aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-  #         aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-  #         aws-region: us-east-1
-      
-  #     - name: Login to Amazon ECR
-  #       id: login-ecr
-  #       uses: aws-actions/amazon-ecr-login@v1
-
-  #     - name: Build, tag, and push image to Amazon ECR
-  #       id: build-image
-  #       env:
-  #         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-  #         IMAGE_TAG: latest
-
-  #         # docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
-  #         # docker push $ECR_REGISTRY/ers-api:$IMAGE_TAG
-  #       run: |
-  #         docker-compose -f docker-compose.aws.yml build
-  #         docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
-  #         docker tag ers-api:latest $ECR_REGISTRY/ers-api:$IMAGE_TAG
+          # docker push $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
+          # docker push $ECR_REGISTRY/ers-api:$IMAGE_TAG
+        run: |
+          docker tag ers-gateway:latest $ECR_REGISTRY/ers-gateway:$IMAGE_TAG
+          docker tag ers-api:latest $ECR_REGISTRY/ers-api:$IMAGE_TAG
           
-  #         echo "setting output values"
-  #         echo "::set-output name=gwimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
-  #         echo "::set-output name=apiimage::$ECR_REGISTRY/ers-api:$IMAGE_TAG"
+          echo "setting output values"
+          echo "::set-output name=gwimage::$ECR_REGISTRY/ers-gateway:$IMAGE_TAG"
+          echo "::set-output name=apiimage::$ECR_REGISTRY/ers-api:$IMAGE_TAG"
 
-  #     - name: Print the image name
-  #       run: |
-  #         echo the images are
-  #         echo ${{ steps.build-image.outputs.apiimage }}
-  #         echo ${{ steps.build-image.outputs.gwimage }}
+      - name: Print the image name
+        run: |
+          echo the images are
+          echo ${{ steps.build-image.outputs.apiimage }}
+          echo ${{ steps.build-image.outputs.gwimage }}
 
   #     # - name: Download task definition
   #     #   run: |
