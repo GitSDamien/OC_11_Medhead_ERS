@@ -19,10 +19,8 @@
             "specs": [21, 54]
         }' http://localhost/api/v1/BedAvailability
     
+    docker exec test-e2e mvn -B test
     
-    docker build ./test-e2e/. -t test-e2e
-    docker run -d -p 8080:8080 test-e2e
-
     docker-compose down
 
 

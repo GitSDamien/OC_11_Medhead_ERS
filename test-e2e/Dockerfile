@@ -17,7 +17,7 @@ COPY . /usr/local/test-e2e/
 WORKDIR /usr/local/test-e2e
 
 # Maven install and assemble sample app
-RUN mvn -B clean
+# RUN mvn -B clean
 
-RUN mvn -B test
+# RUN mvn -B test
 
