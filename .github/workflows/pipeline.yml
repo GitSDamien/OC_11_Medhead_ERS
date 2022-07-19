@@ -54,6 +54,18 @@ jobs:
           fail-on-error: true
 
 
+      - name: Set up JDK 1.8
+        uses: actions/setup-java@v1
+        with:
+          java-version: 1.8
+      
+      - name: Test E2E
+        working-directory: ./test-e2e/
+        run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
+
+
+
+
       ######## DEPLOY TO AWS FREE ###########
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1

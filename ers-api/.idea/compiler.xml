@@ -6,14 +6,16 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="gateway" />
+        <module name="e2e" />
         <module name="ers-api" />
+        <module name="gateway" />
         <module name="ers" />
       </profile>
     </annotationProcessing>
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="e2e" options="-parameters" />
       <module name="ers" options="-parameters" />
       <module name="ers-api" options="-parameters" />
       <module name="gateway" options="-parameters" />

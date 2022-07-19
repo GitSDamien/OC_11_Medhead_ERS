@@ -9,6 +9,7 @@
       <list>
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../ers-gateway/pom.xml" />
+        <option value="$PROJECT_DIR$/../test-e2e/pom.xml" />
       </list>
     </option>
   </component>
