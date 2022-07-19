@@ -1,5 +1,17 @@
+![MedHead Logo](./docs/images/logo.png)
 
-# OC_11_Medhead_ERS
+# MedHead Code Repository
+
+La plateforme MedHead est détenue conjointement et développée par un consortium de 4 groupes médicaux afin de consolider les apprentissages et les ressources partagés et de développer une norme médicale qui optimise les soins aux patients et les interventions d'urgence.
+
+
+# Architecture
+
+## Architecture métier
+
+![Architecture métier](./docs/images/Architecture_metier.png)
+
+
 
 ## Test sur environnement Docker Compose
 
