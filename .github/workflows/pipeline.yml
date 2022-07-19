@@ -61,7 +61,7 @@ jobs:
       
       - name: Test E2E
         working-directory: ./test-e2e/
-        run: docker build . -t test-e2e
+        run: docker network ls
 
 
 

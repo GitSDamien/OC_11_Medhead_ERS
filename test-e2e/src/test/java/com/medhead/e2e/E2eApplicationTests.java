@@ -19,7 +19,7 @@ class E2eApplicationTests {
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		headers.set("gatewayKey", "424C-481A-DA17-4908");
 
-		String url = "http://erp-gateway:80/routes";
+		String url = "http://ers-gateway:80/routes";
 
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 
