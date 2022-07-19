@@ -61,7 +61,7 @@ jobs:
       
       - name: Test E2E
         working-directory: ./test-e2e/
-        run: mvn --batch-mode -Dmaven.test.failure.ignore=true test
+        run: docker build . -t test-e2e
 
 
 
