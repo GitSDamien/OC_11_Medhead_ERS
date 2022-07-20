@@ -7,9 +7,9 @@ La plateforme MedHead est détenue conjointement et développée par un consorti
 
 # Architecture
 
-## Architecture métier
+## [Architecture métier](./docs/Architecture_metier.md)
 
-![Architecture métier](./docs/images/Architecture_metier.png)
+[![Architecture métier](./docs/images/Architecture_metier.png)](./docs/Architecture_metier.md)
 
 
 ## Architecture logicielle
