@@ -20,6 +20,8 @@ Par exemple, SUPPOSONS trois hôpitaux, comme suit :
 <br>
 <br>
 
+## Mise en œuvre
+
 ![Architecture métier](./images/Architecture_metier.png)
 
 1. Requête de demande de disponibilité de lit, selon :
