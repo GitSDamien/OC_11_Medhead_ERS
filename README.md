@@ -12,28 +12,12 @@ La plateforme MedHead est détenue conjointement et développée par un consorti
 [![Architecture métier](./docs/images/Architecture_metier.png)](./docs/Architecture_metier.md)
 
 
-## Architecture logicielle
+## [Environnement Docker](./docs/Environnement_Docker.md)
 
 ![Architecture logicielle](./docs/images/Architecture_logicielle.png)
 
 
 
-## Test sur environnement Docker Compose
-
-    docker-compose up -d --build
-
-    docker exec test-e2e mvn -B test
-    
-    docker-compose down
-
-
-## Environnement Docker
-CF. [./ers/readme.md](./ers/readme.md)
-
-Avec [docker-compose.yml](./docker-compose.yml) nous démarrons 3 conteneurs :
-- Tomcat contenant notre application (port 8080)
-- MySQL Server (port 3306)
-- PHPMyAdmin (port 8081)
 
 
 ## Environnement AWS
