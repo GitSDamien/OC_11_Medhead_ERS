@@ -1,4 +1,4 @@
-![MedHead Logo](./docs/images/logo.png)
+![MedHead Logo](./docs/images/medhead_logo.png)
 
 # MedHead Code Repository
 
@@ -12,13 +12,13 @@ La plateforme MedHead est détenue conjointement et développée par un consorti
 [![Architecture métier](./docs/images/Architecture_metier.png)](./docs/Architecture_metier.md)
 
 
-## [Environnement Docker](./docs/Environnement_Docker.md)
+## [Environnement Docker](./docs/Docker_Environnement.md)
 
-[![Architecture logicielle](./docs/images/Architecture_logicielle.png)](./docs/Environnement_Docker.md)
+[![Architecture logicielle](./docs/images/Docker_Environnement.png)](./docs/Docker_Environnement.md)
 
 
-## [CI/CD & AWS Architecture](./docs/Architecture_AWS.md)
+## [Pipeline CI/CD & AWS Architecture](./docs/AWS_Architecture.md)
 
-[![Architecture AWS](./docs/images/Architecture_AWS.png)](./docs/Architecture_AWS.md)
+[![Architecture AWS](./docs/images/AWS_Architecture.png)](./docs/AWS_Architecture.md)
 
 
