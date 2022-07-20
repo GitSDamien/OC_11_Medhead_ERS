@@ -14,8 +14,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class E2eApplicationTests {
 
 	@Test
-	@DisplayName("Accès Admin de la gateway (token management)") // (4)
-	void gatewayAccessAdmin() {
+	@DisplayName("Accès Admin de la gateway (token management)")
+	void gatewayAccessAdmin4TokenManagement() {
 		RestTemplate restTemplate = new RestTemplate();
 		HttpHeaders headers = new HttpHeaders();
 
@@ -26,9 +26,7 @@ class E2eApplicationTests {
 		HttpEntity<?> entity = new HttpEntity<>(headers);
 		HttpEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity, String.class);
 
-		System.out.println("-------------- Accès Admin pour gestion de Token");
 		System.out.println(response.getBody());
-		System.out.println("-------------------------------");
 
 		Assertions.assertEquals(((ResponseEntity<String>) response).getStatusCode(), HttpStatus.OK);
 	}

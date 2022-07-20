@@ -20,11 +20,11 @@ jobs:
       - uses: actions/checkout@v2
 
       ######## DOCKER COMPOSE ###########
-      - name: docker-compose up --build
+      - name: docker-compose up -d --build
         run: | 
-          docker-compose -f docker-compose.yml up --build -d
-          # docker-compose -f docker-compose.yml -p testing up --build --exit-code-from api-test
+          docker-compose up -d --build
 
+      ########### TEST E2E ##############
       - name: Test E2E
         run: docker exec test-e2e mvn -B test
 
@@ -58,7 +58,6 @@ jobs:
           reporter: java-junit
           fail-on-error: true
 
-
       - name: E2E Test results
         uses: dorny/test-reporter@v1.5.0
         if: always()
@@ -69,7 +68,18 @@ jobs:
           fail-on-error: true
 
 
-
+      ########  DB MIGRATION  ###########
+      - name: Prepare Migration DB to RDS with LIQUIBASE
+        if: success()
+        run: | 
+          echo "change DB for ERS-API"
+          # sed -rn 's/^server.port ([^\n]+)$/\1/p' src/main/resources/application.properties
+          # sed -ir "s/^[#]*\s*server.port .*/server.port 9999/" src/main/resources/application.properties
+          echo "change DB for ERS-GATEWAY"
+          # sed -ir "s/^[#]*\s*server.port .*/server.port 9999/" src/main/resources/application.properties
+          echo "rebuild docker images"
+          docker build ./ers-api/. -t ers-api
+          docker build ./ers-gateway/. -t ers-gateway
 
 
       ######## DEPLOY TO AWS FREE ###########
@@ -139,6 +149,17 @@ jobs:
       #     container-name: ers-gateway
       #     image: ${{ steps.build-image.outputs.webimage }} 
       
+
+
+
+      ########  DB MIGRATION  ###########
+      - name: Exec Migration DB to RDS with LIQUIBASE
+        if: success()
+        run: | 
+          echo "change DB for ERS-API"
+          echo "change DB for ERS-GATEWAY"
+
+
       # - name: Deploy Amazon ECS task definition
       #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
       #   with:

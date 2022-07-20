@@ -20,10 +20,6 @@ La plateforme MedHead est détenue conjointement et développée par un consorti
 
 ## Test sur environnement Docker Compose
 
-    docker build ./ers-api/. -t ers-api
-    docker run -d -p 8081:8081 ers-api
-    ...
-
     docker-compose up -d --build
 
     docker exec test-e2e mvn -B test
