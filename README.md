@@ -14,7 +14,7 @@ La plateforme MedHead est détenue conjointement et développée par un consorti
 
 ## [Environnement Docker](./docs/Environnement_Docker.md)
 
-![Architecture logicielle](./docs/images/Architecture_logicielle.png)
+[![Architecture logicielle](./docs/images/Architecture_logicielle.png)](./docs/Environnement_Docker.md)
 
 
 
