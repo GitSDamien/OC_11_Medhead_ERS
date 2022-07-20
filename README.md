@@ -24,18 +24,8 @@ La plateforme MedHead est détenue conjointement et développée par un consorti
     docker run -d -p 8081:8081 ers-api
     ...
 
-    docker-compose build
+    docker-compose up -d --build
 
-    docker-compose up -d
-
-    curl -H "Content-Type: application/json" 
-        -H "gatewayKey: 343C-ED0B-4137-B27E" 
-        -X POST -d '{
-            "latitude": 43.657554510261534, 
-            "longitude": 7.049383456590217, 
-            "specs": [21, 54]
-        }' http://localhost/api/v1/BedAvailability
-    
     docker exec test-e2e mvn -B test
     
     docker-compose down
