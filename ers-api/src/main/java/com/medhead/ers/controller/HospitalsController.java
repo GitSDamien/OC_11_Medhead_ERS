@@ -16,6 +16,7 @@ import org.springframework.http.*;
 import org.springframework.http.converter.json.MappingJacksonValue;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -37,7 +38,7 @@ public class HospitalsController {
     private MainService mainService = new MainService();
 
     @PostMapping(value = "/BedAvailability")
-    public List<Hospitals> bedAvailability(@RequestBody BedAvailability urgence) {
+    public Hospitals bedAvailability(@RequestBody BedAvailability urgence) {
         LatLong urgencePosition = new LatLong(urgence.getLatitude(), urgence.getLongitude());
         List<Hospitals> rightHospitals = new ArrayList<>();
         List<Hospitals> returnHospitals = new ArrayList<>();
@@ -69,6 +70,9 @@ public class HospitalsController {
             int nbBed = mainService.bedAvailable(elemRight.getId());
             if(nbBed > 0){
                 HttpEntity<String> reponse = mainService.sendDistanceMatrix(urgencePosition, elemRight);
+
+                System.out.println(reponse);
+
                 JSONObject obj = new JSONObject(reponse.getBody());
 
                 String status = obj.getString("status");
@@ -94,7 +98,14 @@ public class HospitalsController {
             }
         }
 
-        return returnHospitals;
+        // trie par distance (reel de conduite)
+        returnHospitals.sort(Comparator.comparing(Hospitals::getDistance));
+
+        if(returnHospitals.size() > 0){
+            return returnHospitals.get(0);
+        } else {
+            throw new ResponseStatusException(HttpStatus.SERVICE_UNAVAILABLE);
+        }
     }
 
     @RequestMapping(value = "/Hospital", method = RequestMethod.GET)

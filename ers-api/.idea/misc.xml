@@ -3,6 +3,7 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$" />
+    <file type="web" url="file://$PROJECT_DIR$/../fake-api-hospital" />
   </component>
   <component name="MavenProjectsManager">
     <option name="originalFiles">
@@ -10,6 +11,7 @@
         <option value="$PROJECT_DIR$/pom.xml" />
         <option value="$PROJECT_DIR$/../ers-gateway/pom.xml" />
         <option value="$PROJECT_DIR$/../test-e2e/pom.xml" />
+        <option value="$PROJECT_DIR$/../fake-api-hospital/pom.xml" />
       </list>
     </option>
   </component>

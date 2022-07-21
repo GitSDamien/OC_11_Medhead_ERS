@@ -3,6 +3,102 @@
 
 
 
+## Déployer le modèle CloudFormation
+
+    AWS CloudFormation > Créer une pile
+
+- Spécifier un modèle : Charger un fichier de modèle > template.yaml
+- Nom de la pile : `MedHeadERS`
+- VPC et sous-réseaux = (ceux-ci sont pré-remplis pour vous)
+- GithubRepoName : `GitSDamien/OC_11_Medhead_ERS`
+- GitHubThumbprintList : `6938fd4d98bab03faadb97b34396831e3780aea1`
+- Cocher "Je sais qu’AWS CloudFormation peut créer des ressources IAM avec des noms personnalisés."
+
+
+## Mettre à jour le code
+
+    AWS CloudFormation > onglet : Sorties
+    
+- S3 bucket name = DeploymentBucket : `medheaders-webappdeploymentbucket-xnrz1941mfuc`
+
+- IAM Role for GitHub = GithubIAMRoleArn : `arn:aws:iam::636384929310:role/CodeDeployRoleforGitHub`
+
+
+Editer le fichier 
+
+    .github/workflows/deploy.yml
+
+    env > S3BUCKET : medheaders-webappdeploymentbucket-xnrz1941mfuc
+    env > AWS_REGION : us-east-1
+
+
+Remplacer le S3 bucket dans 
+
+    aws/scripts/after-install.sh
+
+Git Commit
+
+
+## Configurer les secrets GitHub
+
+    Repo Git > Settings > Secrets > Actions > New repository secret
+
+    IAMROLE_GITHUB
+    arn:aws:iam::636384929310:role/CodeDeployRoleforGitHub
+
+## Intégrer CodeDeploy avec GitHub
+
+    AWS CodeDeploy > Déployer > Applications > Select
+
+    Onglet Déploiement > Créer un déploiement 
+
+- Groupe de déploiement : CodeDeployGroupERS
+- Type de révision : Mon application est stockée dans GitHub
+
+Pour créer une connexion pour les applications AWS CodeDeploy à un compte GitHub, déconnectez-vous de GitHub dans un onglet de navigateur Web distinct. Dans GitHub token name , tapez un nom pour identifier cette connexion, puis choisissez Connect to GitHub . La page Web vous invite à autoriser CodeDeploy à interagir avec GitHub pour votre application.
+
+    Annuler le déploiement (c'était juste pour linker GitHub et AWS)
+
+
+## Déclencher le flux de travail des actions GitHub
+
+## Vérifier le déploiement
+
+EC2 > Équilibreur de charge > Équilibreur de charge > CodeD-Appli-1J2O313XX68ZQ > Nom du DNS
+
+
+http://medhe-appli-bkbhcxcb852i-875200433.us-east-1.elb.amazonaws.com:8080/ers
+
+
+## Connexion au shell d'AWS
+
+    AWS > EC2 > Instances > Instances > Cocher "medhead-ers" > Action > Se connecter > Session Manager > Se connecter
+
+
+## Nettoyer
+
+Pour éviter des modifications futures, vous devez nettoyer les ressources que vous avez créées.
+
+    1. Videz le bucket Amazon S3
+    2. Supprimez la pile CloudFormation (CodeDeployStack) de la console AWS
+    3. Supprimer le secret GitHub ('IAMROLE_GITHUB')
+        1. Accédez aux paramètres du référentiel sur la page GitHub.
+        2. Sélectionnez Secrets sous Actions.
+        3. Sélectionnez IAMROLE_GITHUB et supprimez-le.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

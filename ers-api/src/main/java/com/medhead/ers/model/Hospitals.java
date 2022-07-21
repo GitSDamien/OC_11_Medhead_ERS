@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonFilter;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 
-@JsonFilter("filtreHospital")
+//@JsonFilter("filtreHospital")
 @Entity
 public class Hospitals {
 
