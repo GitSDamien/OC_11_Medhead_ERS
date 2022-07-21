@@ -46,9 +46,9 @@ La solution utilise les services suivants :
 - [Amazon RDS](https://aws.amazon.com/fr/rds) : Ensemble de services gérés qui facilite la configuration, l'utilisation et la mise à l'échelle des bases de données dans le cloud. Moteur utiisé : MySQL.
 
 
-Grâce à **AWS CloudFormation** et son fichier de configuration [cloudFormation_template.yaml](./aws/cloudFormation_template.yaml) et ses [scripts](./aws/scripts/), il devient facile de créer toutes les ressources. 
+Grâce à **AWS CloudFormation** et son fichier de configuration [cloudFormation_template.yaml](../aws/cloudFormation_template.yaml) et ses [scripts](../aws/scripts/), il devient facile de créer toutes les ressources. 
 
-Lors du déployement c'est le fichier [task-definition.json](./aws/) qui entre en jeu et positionne les images contenues sur l'ECR dans les bons compartiments et groupe d'auto-scaling.
+Lors du déployement c'est le fichier [task-definition.json](../aws/) qui entre en jeu et positionne les images contenues sur l'ECR dans les bons compartiments et groupe d'auto-scaling.
 
 
 ## Veuillez consulter 
