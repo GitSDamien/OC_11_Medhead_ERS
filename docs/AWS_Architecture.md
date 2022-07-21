@@ -54,8 +54,8 @@ Lors du déployement c'est le fichier [task-definition.json](../aws/) qui entre 
 ## Veuillez consulter 
 - [AWS_cloudFormation_install.md](./AWS_cloudFormation_install.md)
 - [AWS_cleanup.md](./AWS_cleanup.md)
-- [cloudFormation_template.yaml](../aws/cloudFormation_template.yaml)
 - [AWS_config.md](../aws/AWS_config.md)
+- [cloudFormation_template.yaml](../aws/cloudFormation_template.yaml)
 - [pipeline.yml](../.github/workflows/pipeline.yml)
 
 
