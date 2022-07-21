@@ -10,3 +10,13 @@ Tout notre environnement de développement est contenu dans le fichier [docker-c
 ## Test End 2 End
     docker exec test-e2e mvn -B test
     
+
+
+<br>
+<br>
+
+## Projets liés
+- [ERS-API](../ers-api/) : Logique métier
+- [ERS-GATEWAY](../ers-gateway/) : Authentification & routage
+- [FAKE-API-HOSPITAL](../fake-api-hospital/) : Simulation de l'API externe Hospital
+- [TEST-E2E](../test-e2e/) : Test du parcours complet de l'utilisateur
