@@ -63,3 +63,11 @@ https://medhead/api/v1/BedAvailability
     "duration": "25 mins"
 }
 ```
+
+
+<br>
+<br>
+
+## Projets liés
+- [ERS-API](../ers-api/) : Logique métier
+- [ERS-GATEWAY](../ers-gateway/) : Authentification & routage
