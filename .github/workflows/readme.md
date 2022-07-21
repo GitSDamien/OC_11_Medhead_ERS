@@ -3,7 +3,7 @@ Ce répertoire contient le fichier `pipeline.yml`, utilisé par GitHub Actions, 
 
 ## Références
 
-- [../docs/AWS_Architecture.md](../docs/AWS_Architecture.md)
+- [./docs/AWS_Architecture.md](../../docs/AWS_Architecture.md)
 
 
 
