@@ -22,7 +22,7 @@ Par exemple, SUPPOSONS trois hôpitaux, comme suit :
 
 ## Mise en œuvre
 
-![Architecture métier](./images/Architecture_metier.png)
+![Architecture métier](./images/Architecture_metier_simple.png)
 
 1. Requête de demande de disponibilité de lit, selon :
     - latitude / longitude
@@ -39,6 +39,7 @@ https://medhead/api/v1/BedAvailability
 ```
 
 2. Authentification par token encapsulé dans le header
+2. b publication des événements métier
 3. Routage vers le microservice 
     - ERS-API :8081 /BedAvailability
 4. Raifraichir les données toutes les 24h pour les tables :
@@ -50,6 +51,7 @@ https://medhead/api/v1/BedAvailability
     - (3 est le nombre max d'hopitaux pour les étapes 6. et 7.)
 8. Envoyer la réservation de lit à l'API Hospital
 9. Répondre à l'utilisateur (JSON file) l'hopital choisi avec son temps de parcours et ses kilomètres.
+9. b publication des événements métier 
 
 ```
 {
