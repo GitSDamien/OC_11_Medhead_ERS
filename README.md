@@ -25,9 +25,3 @@ La plateforme MedHead est détenue conjointement et développée par un consorti
 ## [Pipeline CI/CD with GitHub Actions](./docs/AWS_Architecture.md)
 
 [![Architecture AWS](./docs/images/GitHubActions_pipeline.png)](./docs/GitHubActions_pipeline.md)
-
-
-● Architecture des données et de l'information
-● Architecture de la sécurité
-
-PLAN DE RECOUVREMENT

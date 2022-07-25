@@ -5,7 +5,7 @@
 ![Pipeline CI/CD](./images/GitHubActions_pipeline.png)
 
 ## GitHub
-Seul la branche "main" actionne la pipeline Ci/CD, nous pouvons donc avoir d'autres branches complement indépendantes.
+Seule la branche "main" actionne la pipeline Ci/CD, nous pouvons donc avoir d'autres branches complement indépendantes.
 Il est possible faire un "fork" sur le projet pour avoir le template du projet.
 
 ## GitHub Actions
