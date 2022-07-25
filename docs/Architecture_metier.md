@@ -22,7 +22,7 @@ Par exemple, SUPPOSONS trois hôpitaux, comme suit :
 
 ## Mise en œuvre
 
-![Architecture métier](./images/Architecture_metier_simple.png)
+![Architecture métier](./images/Architecture_metier.png)
 
 1. Requête de demande de disponibilité de lit, selon :
     - latitude / longitude
