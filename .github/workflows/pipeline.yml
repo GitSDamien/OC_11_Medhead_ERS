@@ -39,13 +39,20 @@ jobs:
           docker cp ers-api:/usr/local/ers-api/target/surefire-reports/ ./testresult/ers-api
           docker cp ers-api:/usr/local/ers-api/target/site/ ./testresult/ers-api
           docker cp ers-gateway:/usr/local/ers-gateway/target/surefire-reports/ ./testresult/ers-gateway
+          docker cp ers-gateway:/usr/local/ers-gateway/target/site/ ./testresult/ers-gateway
           docker cp test-e2e:/usr/local/test-e2e/target/surefire-reports/ ./testresult/test-e2e
 
       - name: Upload ERS-API Jacoco results
         uses: actions/upload-artifact@v2
         with:
-          name: unit-tests-jacoco
+          name: code-coverage-ers-api
           path: "./testresult/ers-api/site/"
+
+      - name: Upload ERS-GATEWAY Jacoco results
+        uses: actions/upload-artifact@v2
+        with:
+          name: code-coverage-ers-gateway
+          path: "./testresult/ers-gateway/site/"
 
       - name: ERS-API Test results
         uses: dorny/test-reporter@v1.5.0
