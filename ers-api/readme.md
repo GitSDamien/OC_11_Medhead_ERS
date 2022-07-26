@@ -6,3 +6,9 @@
 
 
 
+## Commandes utiles
+
+    mvn -B -f ./ers-api/ test
+
+    mvn  verify -Djacoco.destFile=target/exportJacoco/jacoco-fast.exec
+    

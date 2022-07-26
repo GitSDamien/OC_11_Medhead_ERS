@@ -19,7 +19,7 @@ WORKDIR /usr/local/ers-api
 # Maven install and assemble sample app
 # RUN mvn -B clean
 
-RUN mvn -B install
+RUN mvn -B install -Djacoco.destFile=target/exportJacoco/jacoco-fast.exec
 
 RUN cp /usr/local/ers-api/target/*.war /usr/local/ers-api/target/ers.war
 
