@@ -43,12 +43,14 @@ jobs:
           docker cp test-e2e:/usr/local/test-e2e/target/surefire-reports/ ./testresult/test-e2e
 
       - name: Upload ERS-API Jacoco results
+        if: success()
         uses: actions/upload-artifact@v2
         with:
           name: code-coverage-ers-api
           path: "./testresult/ers-api/site/"
 
       - name: Upload ERS-GATEWAY Jacoco results
+        if: success()
         uses: actions/upload-artifact@v2
         with:
           name: code-coverage-ers-gateway
@@ -135,33 +137,35 @@ jobs:
 
       ######## DEPLOY TO AWS RENTABLE ###########
 
-      # - name: Download task definition
-      #   run: |
-      #     aws ecs describe-task-definition --task-definition ERSTaskDef --query taskDefinition | jq -r 'del(
-      #       .taskDefinitionArn,
-      #       .requiresAttributes,
-      #       .compatibilities,
-      #       .revision,
-      #       .status,
-      #       .registeredAt,
-      #       .registeredBy
-      #     )' > task-definition.json
+      - name: Download task definition
+        run: |
+          # aws ecs describe-task-definition --task-definition ERSTaskDef --query taskDefinition | jq -r 'del(
+          #   .taskDefinitionArn,
+          #   .requiresAttributes,
+          #   .compatibilities,
+          #   .revision,
+          #   .status,
+          #   .registeredAt,
+          #   .registeredBy
+          # )' > task-definition.json
       
-      # - name: Fill in the new api image ID in the Amazon ECS task definition
-      #   id: api-task-def
-      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-      #   with:
-      #     task-definition: task-definition.json
-      #     container-name: ers-api
-      #     image: ${{ steps.build-image.outputs.apiimage }}
+      - name: ECS task definition to ERS-API image
+        id: ers-api-task-def
+        run: echo ers-api-task-def
+        # uses: aws-actions/amazon-ecs-render-task-definition@v1
+        # with:
+        #   task-definition: task-definition.json
+        #   container-name: ers-api
+        #   image: ${{ steps.build-image.outputs.apiimage }}
 
-      # - name: Fill in the new nginx image ID in the Amazon ECS task definition
-      #   id: web-task-def
-      #   uses: aws-actions/amazon-ecs-render-task-definition@v1
-      #   with:
-      #     task-definition: ${{ steps.api-task-def.outputs.task-definition }}
-      #     container-name: ers-gateway
-      #     image: ${{ steps.build-image.outputs.webimage }} 
+      - name: ECS task definition to ERS-GATEWAY image
+        id: ers-gateway-task-def
+        run: echo web-task-def
+        # uses: aws-actions/amazon-ecs-render-task-definition@v1
+        # with:
+        #   task-definition: ${{ steps.api-task-def.outputs.task-definition }}
+        #   container-name: ers-gateway
+        #   image: ${{ steps.build-image.outputs.webimage }} 
       
 
 
@@ -174,28 +178,30 @@ jobs:
           echo "change DB for ERS-GATEWAY"
 
 
-      # - name: Deploy Amazon ECS task definition
-      #   uses: aws-actions/amazon-ecs-deploy-task-definition@v1
-      #   with:
-      #     task-definition: ${{ steps.web-task-def.outputs.task-definition }}
-      #     service: ERSService
-      #     cluster: ERSCluster
-      #     wait-for-service-stability: true
+      - name: Deploy Amazon ECS task definition
+        run: echo "Deploy Amazon ECS task definition"
+        # uses: aws-actions/amazon-ecs-deploy-task-definition@v1
+        # with:
+        #   task-definition: ${{ steps.web-task-def.outputs.task-definition }}
+        #   service: ERSService
+        #   cluster: ERSCluster
+        #   wait-for-service-stability: true
 
 
       ###### SLACK NOTIFICATION #########
-      # - name: Send slack notification
-      #   if: always()
-      #   uses: edge/simple-slack-notify@master    
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-      #   with:
-      #     channel: '#deployment'
-      #     status: ${{ job.status }}
-      #     success_text: Build completed successfully
-      #     failure_text: 'Build failed'
-      #     cancelled_text: 'Build was cancelled'
-      #     fields: |
-      #       [{ "title": "Repository", "value": "${env.GITHUB_REPOSITORY}", "short": true },
-      #       { "title": "Branch", "value": "${env.BRANCH}", "short": true },
-      #       { "title": "Action URL", "value": "${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}"}]
+      - name: Send slack notification
+        if: always()
+        run: echo "Send slack notification"
+        # uses: edge/simple-slack-notify@master    
+        # env:
+        #   SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+        # with:
+        #   channel: '#deployment'
+        #   status: ${{ job.status }}
+        #   success_text: Build completed successfully
+        #   failure_text: 'Build failed'
+        #   cancelled_text: 'Build was cancelled'
+        #   fields: |
+        #     [{ "title": "Repository", "value": "${env.GITHUB_REPOSITORY}", "short": true },
+        #     { "title": "Branch", "value": "${env.BRANCH}", "short": true },
+        #     { "title": "Action URL", "value": "${env.GITHUB_SERVER_URL}/${env.GITHUB_REPOSITORY}/actions/runs/${env.GITHUB_RUN_ID}"}]
