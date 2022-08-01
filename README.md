@@ -26,3 +26,4 @@ La plateforme MedHead est détenue conjointement et développée par un consorti
 
 [![Architecture AWS](./docs/images/GitHubActions_pipeline.png)](./docs/GitHubActions_pipeline.md)
 
+
